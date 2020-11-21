@@ -66,3 +66,24 @@ galleryContainer.addEventListener("click", openOriginalInModal);
 
 // Добавление слушателя события на кнопку закрытия модалки
 modalCloseBtn.addEventListener("click", closeModal);
+
+// Дополнительные задания
+// 1. Закрытие модального окна по клику на div.lightbox__overlay.
+// Получение доступа к div.lightbox__overlay
+const overlay = document.querySelector("div.lightbox__overlay");
+
+//Добавление слушателя события на  div.lightbox__overlay
+overlay.addEventListener("click", closeModal);
+
+// 2. Закрытие модального окна по нажатию клавиши ESC.
+// Функция для того, чтобы убрать класс "is-open" с модалки, если модалка сейчас открыта
+function onPressEscape(event) {
+  if (event.code === "Escape" && modalContainer.classList.contains("is-open")) {
+    closeModal();
+  }
+}
+
+// Добавление слушателя события на window
+window.addEventListener("keydown", onPressEscape);
+
+// 3. Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
