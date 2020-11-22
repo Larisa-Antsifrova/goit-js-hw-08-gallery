@@ -12,6 +12,8 @@ const modalCloseBtn = document.querySelector(
 );
 // к элементу изображения в модалке
 const modalImageElement = modalContainer.querySelector(".lightbox__image");
+// к длине коллекции изображений в галерее
+const galleryLength = document.getElementsByClassName("gallery__image").length;
 
 // Функция для создания и рендера разметки по массиву данных и по предоставленному шаблону
 function createGalleryMarkup(imagesArray) {
@@ -48,18 +50,30 @@ function openModal(event) {
 
   const originalImageSource = event.target.dataset.source;
   const originalImageAlt = event.target.alt;
+  const currentImageIndex = event.target.dataset.index;
 
   modalImageElement.setAttribute("src", originalImageSource);
   modalImageElement.setAttribute("alt", originalImageAlt);
+  modalImageElement.setAttribute("data-index", currentImageIndex);
 
   modalContainer.classList.add("is-open");
+
+  // Добавление слушателя события на window для закрытия модалки по клавише ESC
+  window.addEventListener("keydown", onPressEscape);
+  // Добавление слушателя события на window для перелистования изображение по клавишам "вправо" и "влево"
+  window.addEventListener("keydown", slideImage);
 }
 
 // Функция для закрытия модалки по клику на кнопку закрытия
 function closeModal() {
   modalImageElement.setAttribute("src", "");
   modalImageElement.setAttribute("alt", "");
+  modalImageElement.setAttribute("data-index", "");
   modalContainer.classList.remove("is-open");
+
+  // Удаление слушателей события с window
+  window.removeEventListener("keydown", onPressEscape);
+  window.removeEventListener("keydown", slideImage);
 }
 
 // Добавление слушателя собития на контейнер галереи
@@ -77,41 +91,34 @@ const overlay = document.querySelector("div.lightbox__overlay");
 overlay.addEventListener("click", closeModal);
 
 // 2. Закрытие модального окна по нажатию клавиши ESC.
-// Функция для того, чтобы убрать класс "is-open" с модалки, если модалка сейчас открыта
+// Добавление слушателя события на window указано в функции в openModal. А в closeModal этот слушатель снимается.
+// Функция для того, чтобы убрать класс "is-open" с модалки
 function onPressEscape(event) {
-  if (event.code === "Escape" && modalContainer.classList.contains("is-open")) {
+  if (event.code === "Escape") {
     closeModal();
   }
 }
 
-// Добавление слушателя события на window
-window.addEventListener("keydown", onPressEscape);
+// 3. "Пролистывание" изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
+// Функция, которая вызывает функцию подмены изображений взависимости от того, какая клавиша была нажата
+function slideImage(event) {
+  // Доступ к currentIndex
+  let currentIndex = +modalImageElement.dataset.index;
 
-// 3. Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
-// Доступ к длине коллекции изображений в галерее
-const galleryLength = document.getElementsByClassName("gallery__image").length;
-
-// Добавление слушателя события для получения индекса текущего изображения в модалке
-galleryContainer.addEventListener("click", getCurrentIndex);
-
-// Функция, которая достаёт индекс текущего изображения в модалке, а внутри понеслась!
-function getCurrentIndex(event) {
-  let currentIndex = +event.target.dataset.index;
-
-  window.addEventListener("keydown", slideImage);
-
-  function slideImage(event) {
-    if (event.key === "ArrowRight" && currentIndex < galleryLength - 1) {
-      currentIndex += 1;
-      console.log(currentIndex);
-      modalImageElement.setAttribute("src", images[currentIndex].original);
-      modalImageElement.setAttribute("alt", images[currentIndex].description);
-    }
-    if (event.key === "ArrowLeft" && currentIndex > 0) {
-      currentIndex -= 1;
-      console.log(currentIndex);
-      modalImageElement.setAttribute("src", images[currentIndex].original);
-      modalImageElement.setAttribute("alt", images[currentIndex].description);
-    }
+  if (event.key === "ArrowRight" && currentIndex < galleryLength - 1) {
+    currentIndex += 1;
+    showNewImage(currentIndex);
   }
+
+  if (event.key === "ArrowLeft" && currentIndex > 0) {
+    currentIndex -= 1;
+    showNewImage(currentIndex);
+  }
+}
+
+// Функция для подмены изображений при "перелистывании" галереи
+function showNewImage(currentIndex) {
+  modalImageElement.setAttribute("src", images[currentIndex].original);
+  modalImageElement.setAttribute("alt", images[currentIndex].description);
+  modalImageElement.setAttribute("data-index", currentIndex);
 }
