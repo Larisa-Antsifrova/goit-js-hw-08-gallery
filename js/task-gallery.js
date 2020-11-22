@@ -74,7 +74,7 @@ function closeModal() {
   window.removeEventListener("keydown", slideImage);
 }
 
-// Добавление слушателя собития на контейнер галереи
+// Добавление слушателя события на контейнер галереи
 galleryContainer.addEventListener("click", openModal);
 
 // Добавление слушателя события на кнопку закрытия модалки
@@ -85,7 +85,7 @@ modalCloseBtn.addEventListener("click", closeModal);
 // Получение доступа к div.lightbox__overlay
 const overlay = document.querySelector("div.lightbox__overlay");
 
-//Добавление слушателя события на  div.lightbox__overlay
+//Добавление слушателя события на div.lightbox__overlay
 overlay.addEventListener("click", closeModal);
 
 // 2. Закрытие модального окна по нажатию клавиши ESC.
@@ -98,7 +98,7 @@ function onPressEscape(event) {
 }
 
 // 3. "Пролистывание" изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
-// Функция, которая вызывает функцию подмены изображений взависимости от того, какая клавиша была нажата
+// Функция, которая вызывает функцию подмены изображений в зависимости от того, какая клавиша была нажата
 function slideImage(event) {
   // Доступ к длине коллекции изображений в галерее
   const galleryLength = document.getElementsByClassName("gallery__image")
