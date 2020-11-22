@@ -12,8 +12,6 @@ const modalCloseBtn = document.querySelector(
 );
 // к элементу изображения в модалке
 const modalImageElement = modalContainer.querySelector(".lightbox__image");
-// к длине коллекции изображений в галерее
-const galleryLength = document.getElementsByClassName("gallery__image").length;
 
 // Функция для создания и рендера разметки по массиву данных и по предоставленному шаблону
 function createGalleryMarkup(imagesArray) {
@@ -102,6 +100,9 @@ function onPressEscape(event) {
 // 3. "Пролистывание" изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
 // Функция, которая вызывает функцию подмены изображений взависимости от того, какая клавиша была нажата
 function slideImage(event) {
+  // Доступ к длине коллекции изображений в галерее
+  const galleryLength = document.getElementsByClassName("gallery__image")
+    .length;
   // Доступ к currentIndex
   let currentIndex = +modalImageElement.dataset.index;
 
